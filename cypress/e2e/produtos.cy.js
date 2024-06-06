@@ -6,13 +6,11 @@ describe('Testes da Funcionalidade Produtos', () => {
     before(() => {
         cy.token('fulano@qa.com', 'teste').then(tkn => { token = tkn });
     });
-
     it('Deve validar contrato de produtos', () => {
         cy.request('produtos').then(response => {
             return contrato.validateAsync(response.body);
         });
     });
-
     it('Deve listar os produtos cadastrados', () => {
         cy.request({
             method: 'GET',
@@ -23,9 +21,9 @@ describe('Testes da Funcionalidade Produtos', () => {
             expect(response.duration).to.be.lessThan(20);
         });
     });
-
     it('Deve cadastrar um produto com sucesso', () => {
         let produto = `Produto EBAC ${Math.floor(Math.random() * 100000000)}`;
+        cy.log(`Tentando cadastrar o produto: ${produto}`);
         cy.request({
             method: 'POST',
             url: 'produtos',
@@ -41,7 +39,6 @@ describe('Testes da Funcionalidade Produtos', () => {
             expect(response.body.message).to.equal('Cadastro realizado com sucesso');
         });
     });
-
     it('Deve validar mensagem de erro ao cadastrar produto repetido', () => {
         cy.cadastrarProduto(token, 'Produto EBAC Novo 1', 250, "Descrição do produto novo", 180)
             .then((response) => {
@@ -49,16 +46,17 @@ describe('Testes da Funcionalidade Produtos', () => {
                 expect(response.body.message).to.equal('Já existe produto com esse nome');
             });
     });
-
     it('Deve editar um produto já cadastrado', () => {
         cy.request('produtos').then(response => {
             let id = response.body.produtos[0]._id;
+            cy.log(`Tentando editar o produto com ID: ${id}`);
+            let produtoEditado = `Produto Editado ${Math.floor(Math.random() * 100000000)}`;
             cy.request({
                 method: 'PUT', 
                 url: `produtos/${id}`,
                 headers: {authorization: token}, 
                 body: {
-                    "nome": "Produto Editado 45642083",
+                    "nome": produtoEditado,
                     "preco": 100,
                     "descricao": "Produto editado",
                     "quantidade": 100
@@ -68,19 +66,19 @@ describe('Testes da Funcionalidade Produtos', () => {
             });
         });
     });
-
     it('Deve editar um produto cadastrado previamente', () => {
         let produto = `Produto EBAC ${Math.floor(Math.random() * 100000000)}`;
         cy.cadastrarProduto(token, produto, 250, "Descrição do produto novo", 180)
         .then(response => {
             let id = response.body._id;
-
+            cy.log(`Produto cadastrado com ID: ${id}`);
+            let produtoEditado = `Produto Editado ${Math.floor(Math.random() * 100000000)}`;
             cy.request({
                 method: 'PUT', 
                 url: `produtos/${id}`,
                 headers: {authorization: token}, 
                 body: {
-                    "nome": produto,
+                    "nome": produtoEditado,
                     "preco": 200,
                     "descricao": "Produto editado",
                     "quantidade": 300
@@ -90,12 +88,12 @@ describe('Testes da Funcionalidade Produtos', () => {
             });
         });
     });
-
     it('Deve deletar um produto previamente cadastrado', () => {
         let produto = `Produto EBAC ${Math.floor(Math.random() * 100000000)}`;
         cy.cadastrarProduto(token, produto, 250, "Descrição do produto novo", 180)
         .then(response => {
             let id = response.body._id;
+            cy.log(`Produto cadastrado para deleção com ID: ${id}`);
             cy.request({
                 method: 'DELETE',
                 url: `produtos/${id}`,

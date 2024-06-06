@@ -19,5 +19,4 @@ describe('Login', () => {
             Cypress.env('token', response.body.authorization);
         });
     });
-
 });
