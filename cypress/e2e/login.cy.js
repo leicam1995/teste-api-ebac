@@ -14,8 +14,6 @@ describe('Login', () => {
             expect(response.status).to.equal(200);
             expect(response.body.message).to.equal('Login realizado com sucesso');
             cy.log(response.body.authorization);
-
-            // Armazenar o token em uma variável de ambiente
             Cypress.env('token', response.body.authorization);
         });
     });

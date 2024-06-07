@@ -12,12 +12,14 @@ describe('Testes da Funcionalidade Usuários', () => {
       });
     });
   });
+
   it('Deve listar usuários cadastrados', () => {
     cy.request(apiUrl).then((response) => {
       expect(response.status).to.eq(200);
       expect(response.body).to.be.an('array');
     });
   });
+
   it('Deve cadastrar um usuário com sucesso', () => {
     const newUser = {
       name: faker.name.fullName(),
@@ -66,6 +68,7 @@ describe('Testes da Funcionalidade Usuários', () => {
       });
     });
   });
+
   it('Deve validar um usuário com email inválido', () => {
     const invalidUser = {
       name: faker.name.fullName(),
@@ -102,6 +105,7 @@ describe('Testes da Funcionalidade Usuários', () => {
       }
     });
   });
+
   it('Deve editar um usuário previamente cadastrado', () => {
     const updatedUser = {
       name: faker.name.fullName(),
@@ -116,6 +120,7 @@ describe('Testes da Funcionalidade Usuários', () => {
       });
     });
   });
+
   it('Deve deletar um usuário previamente cadastrado', () => {
     cy.request(apiUrl).then((response) => {
       const userId = response.body[0].id;
@@ -127,7 +132,7 @@ describe('Testes da Funcionalidade Usuários', () => {
           failOnStatusCode: false
         }).then((response) => {
           if (response.status === 200) {
-            cy.log('A API ainda retorna 200 após a exclusão. Verificar a lógica de exclusão.');
+            cy.log('A API ainda retorna 200 após a exclusão.');
           } else {
             expect(response.status).to.eq(404);
           }
