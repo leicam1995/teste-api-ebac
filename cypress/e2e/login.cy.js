@@ -11,10 +11,10 @@ describe('Login', () => {
                 "password": "teste" 
             }
         }).then((response) => {
-            expect(response.status).to.equal(200);
-            expect(response.body.message).to.equal('Login realizado com sucesso');
-            cy.log(response.body.authorization);
-            Cypress.env('token', response.body.authorization);
-        });
+            expect(response.status).to.equal(200)
+            expect(response.body.message).to.equal('Login realizado com sucesso')
+            cy.log(response.body.authorization)
+        })
     });
+
 });
